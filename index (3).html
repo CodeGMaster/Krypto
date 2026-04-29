@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiza Rynku Kryptowalut - Raport Rozszerzony</title>
+    <style>
+        :root {
+            --bg-color: #0b0f1a;
+            --card-bg: #161b2c;
+            --accent-blue: #38bdf8;
+            --accent-gold: #f59e0b;
+            --accent-purple: #818cf8;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --error: #f43f5e;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 5rem 1rem;
+            text-align: center;
+            background: radial-gradient(circle at top, #1e293b 0%, #0b0f1a 100%);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+        }
+
+        .author-box {
+            display: inline-block;
+            margin-top: 2.5rem;
+            padding: 1.5rem 3rem;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px border;
+            border-image: linear-gradient(to right, var(--accent-blue), var(--accent-purple)) 1;
+            text-align: left;
+        }
+
+        .author-box p {
+            margin: 0.3rem 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .author-label {
+            color: var(--accent-blue);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 2.5rem;
+        }
+
+        .section-title span {
+            color: var(--accent-blue);
+        }
+
+        /* Crypto Grid Layout */
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .crypto-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crypto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .crypto-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .crypto-card:hover::before {
+            opacity: 1;
+        }
+
+        .crypto-logo {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+        }
+
+        .crypto-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .crypto-card .tag {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .crypto-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            min-height: 100px;
+        }
+
+        .facts-list {
+            list-style: none;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .facts-list li {
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .facts-list li b {
+            color: var(--accent-gold);
+            margin-right: 8px;
+        }
+
+        /* Detailed Analysis Section */
+        .analysis-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 3rem;
+        }
+
+        .analysis-card {
+            padding: 3rem;
+            border-radius: 30px;
+            position: relative;
+        }
+
+        .pros-card {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(11, 15, 26, 1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .cons-card {
+            background: linear-gradient(145deg, rgba(244, 63, 94, 0.05) 0%, rgba(11, 15, 26, 1) 100%);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .analysis-card h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pros-card h3 { color: var(--success); }
+        .cons-card h3 { color: var(--error); }
+
+        .analysis-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .analysis-item p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem;
+            background: #060912;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .analysis-wrapper { grid-template-columns: 1fr; }
+            .crypto-grid { grid-template-columns: 1fr; }
+            .author-box { width: 100%; padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Globalny Rynek <span>Kryptowalut</span></h1>
+        <p>Kompleksowe zestawienie kluczowych aktywów cyfrowych i technologii blockchain</p>
+        
+        <div class="author-box">
+            <p><span class="author-label">Student:</span> Hubert Sieradzki</p>
+            <p><span class="author-label">Nr Indeksu:</span> 127608</p>
+            <p><span class="author-label">Data:</span> 29 kwietnia 2026</p>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <h2 class="section-title">Kluczowe <span>Projekty</span></h2>
+        
+        <div class="crypto-grid">
+            
+            <div class="crypto-card">
+                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="BTC" class="crypto-logo">
+                <span class="tag">STORE OF VALUE</span>
+                <h3>Bitcoin (BTC)</h3>
+                <p class="crypto-description">Prekursor wszystkich kryptowalut. Wykorzystuje mechanizm Proof of Work do zabezpieczania sieci, co czyni go najbardziej odpornym na ataki systemem finansowym na świecie.</p>
+                <ul class="facts-list">
+                    <li><b>Podaż:</b> Sztywny limit 21 milionów sztuk zapobiega inflacji.</li>
+                    <li><b>Halving:</b> Co ok. 4 lata nagroda dla górników spada o połowę.</li>
+                    <li><b>Adopcja:</b> Uznany za oficjalny środek płatniczy w Salwadorze.</li>
+                </ul>
+            </div>
+
+            <div class="crypto-card">
+                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" alt="ETH" class="crypto-logo">
+                <span class="tag">SMART CONTRACTS</span>
+                <h3>Ethereum (ETH)</h3>
+                <p class="crypto-description">Światowy komputer do uruchamiania zdecentralizowanych aplikacji (dApps). Po aktualizacji "The Merge" zużywa o 99% mniej energii niż wcześniej.</p>
+                <ul class="facts-list">
+                    <li><b>Ekosystem:</b> Fundament dla większości projektów DeFi i NFT.</li>
+                    <li><b>Staking:</b> Użytkownicy zarabiają na blokowaniu swoich ETH w sieci.</li>
+                    <li><b>L2:</b> Rozwijany przez rozwiązania takie jak Arbitrum czy Optimism.</li>
+                </ul>
+            </div>
+
+            <div class="crypto-card">
+                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" class="crypto-logo">
+                <span class="tag">STABLECOIN</span>
+                <h3>Tether (USDT)</h3>
+                <p class="crypto-description">Cyfrowy odpowiednik dolara. Kluczowy element płynności na giełdach, pozwalający inwestorom na szybką ucieczkę od zmienności rynkowej.</p>
+                <ul class="facts-list">
+                    <li><b>Pokrycie:</b> Zabezpieczony rezerwami gotówki i papierów dłużnych.</li>
+                    <li><b>Wolumen:</b> Często generuje większy obrót dobowy niż sam Bitcoin.</li>
+                    <li><b>Zasięg:</b> Działa na wielu blockchainach (Ethereum, Tron, Solana).</li>
+                </ul>
+            </div>
+
+            <div class="crypto-card">
+                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.png" alt="BNB" class="crypto-logo">
+                <span class="tag">EXCHANGE TOKEN</span>
+                <h3>BNB (BNB)</h3>
+                <p class="crypto-description">Natywny token ekosystemu Binance. Służy do opłacania prowizji na giełdzie oraz jest paliwem dla sieci BNB Smart Chain.</p>
+                <ul class="facts-list">
+                    <li><b>Auto-Burn:</b> Systematyczne niszczenie tokenów zwiększa rzadkość.</li>
+                    <li><b>Użyteczność:</b> Zniżki handlowe i dostęp do nowych projektów (Launchpad).</li>
+                    <li><b>Prędkość:</b> Oferuje znacznie szybsze i tańsze transakcje niż Ethereum.</li>
+                </ul>
+            </div>
+
+            <div class="crypto-card">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL" class="crypto-logo">
+                <span class="tag">HIGH PERFORMANCE</span>
+                <h3>Solana (SOL)</h3>
+                <p class="crypto-description">Blockchain zaprojektowany z myślą o masowej adopcji. Wykorzystuje unikalny mechanizm Proof of History, osiągając tysiące transakcji na sekundę.</p>
+                <ul class="facts-list">
+                    <li><b>Wydajność:</b> Teoretyczna przepustowość do 65,000 TPS.</li>
+                    <li><b>Koszty:</b> Średni koszt transakcji to ułamek centa.</li>
+                    <li><b>Innowacja:</b> Silna pozycja w sektorze zdecentralizowanych finansów i gier.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <h2 class="section-title">Bilans <span>Inwestycyjny</span></h2>
+        
+        <div class="analysis-wrapper">
+            
+            <div class="analysis-card pros-card">
+                <h3>Potencjał i Korzyści</h3>
+                <div class="analysis-item">
+                    <h4>Inkluzja finansowa</h4>
+                    <p>Umożliwia dostęp do usług bankowych miliardom ludzi, którzy nie posiadają konta w tradycyjnym banku.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Ochrona przed inflacją</h4>
+                    <p>Ograniczona podaż wielu kryptowalut sprawia, że są one postrzegane jako tarcza przeciwko drukowaniu pieniądza.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Transparentność i bezpieczeństwo</h4>
+                    <p>Każda transakcja jest zapisana w publicznym rejestrze, którego nie da się sfałszować ani usunąć.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Programowalność pieniądza</h4>
+                    <p>Smart kontrakty pozwalają na automatyzację umów bez udziału prawników i notariuszy.</p>
+                </div>
+            </div>
+
+            <div class="analysis-card cons-card">
+                <h3>Ryzyka i Bariery</h3>
+                <div class="analysis-item">
+                    <h4>Ekstremalna zmienność</h4>
+                    <p>Wahania kursu rzędu kilkudziesięciu procent w ciągu doby są realnym zagrożeniem dla kapitału.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Nieodwracalność błędów</h4>
+                    <p>Wysłanie środków na zły adres lub zgubienie klucza prywatnego oznacza bezpowrotną utratę majątku.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Niepewność regulacyjna</h4>
+                    <p>Zmiany w prawie poszczególnych państw mogą drastycznie wpłynąć na legalność i cenę aktywów.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Wyzwania środowiskowe</h4>
+                    <p>Wydobycie starszych kryptowalut (jak BTC) wciąż wiąże się z wysokim zużyciem energii elektrycznej.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+       
+   
+
+</body>
+</html>
